@@ -260,10 +260,17 @@
   }
   .logo-tile{
     background:var(--card); aspect-ratio:3/2; display:flex; align-items:center; justify-content:center; padding:18px;
+    overflow:hidden;
   }
-  .logo-tile svg{width:100%; height:100%; fill:var(--ink-faint); transition:fill .3s ease, transform .3s ease;}
+  .logo-tile svg{
+    width:82%; height:82%; min-width:0; min-height:0; max-width:82%; max-height:82%;
+    display:block; fill:var(--ink-faint); transition:fill .3s ease, transform .3s ease;
+  }
   .logo-tile:hover svg{fill:var(--brand); transform:scale(1.06);}
-  .logo-tile img{width:100%; height:100%; object-fit:contain;}
+  .logo-tile img{
+    width:82%; height:82%; min-width:0; min-height:0; max-width:82%; max-height:82%;
+    display:block; object-fit:contain;
+  }
   .logo-tile.multicolor svg, .logo-tile.multicolor img{filter:grayscale(1); transition:filter .35s ease, transform .3s ease;}
   .logo-tile.multicolor:hover svg, .logo-tile.multicolor:hover img{filter:grayscale(0); transform:scale(1.06);}
   .also-row{margin-top:22px; padding-top:22px; border-top:1px dashed var(--line);}
@@ -273,63 +280,68 @@
   .tag-cloud span::after{content:'·'; margin-left:10px; color:var(--ink-faint);}
   .tag-cloud span:last-child::after{content:'';}
 
-  /* Projects */
-  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;}
-  .filter-btn{
-    font-family:var(--mono); font-size:.72rem; letter-spacing:.04em; text-transform:uppercase;
-    border:1px solid var(--line-strong); background:transparent; color:var(--ink-soft);
-    border-radius:100px; padding:8px 14px; cursor:pointer; transition:all .2s ease;
-  }
-  .filter-btn:hover{color:var(--ink);}
-  .filter-btn.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
-  :root[data-theme="dark"] .filter-btn.active, .filter-btn.active{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
-  .proj-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px;}
-  .proj-card{
-    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
-    padding:18px; transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
-  }
-  .proj-card:hover{transform:translateY(-3px); border-color:var(--line-strong); box-shadow:var(--shadow);}
-  .proj-card .eyebrow{margin-bottom:10px;}
-  .proj-card h4{font-size:.98rem; font-weight:600; line-height:1.3;}
-  .proj-card.hide{display:none;}
-
   /* Showreel */
   .showcase-card{
-    position:relative; display:flex; align-items:center; gap:22px;
-    width:100%; min-height:220px; padding:32px;
-    border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
-    background:linear-gradient(135deg, var(--ink) 0%, #1c2126 60%, var(--ink) 100%);
-    color:#fff; text-decoration:none; cursor:pointer;
-    box-shadow:var(--shadow); transition:transform .25s ease, box-shadow .25s ease;
+    display:flex; align-items:center; gap:22px;
+    width:auto; padding:0; margin:0; border:none; background:none; box-shadow:none;
+    color:var(--ink); text-decoration:none; cursor:pointer; font:inherit;
+    transition:transform .2s ease;
   }
-  .showcase-card:hover{transform:translateY(-3px);}
-  .showcase-card::after{
-    content:''; position:absolute; inset:0; opacity:.5; pointer-events:none;
-    background-image:repeating-linear-gradient(115deg, rgba(255,255,255,.05) 0 2px, transparent 2px 6px);
-  }
+  .showcase-card:hover{transform:translateX(4px);}
   .showcase-play{
-    position:relative; z-index:1; flex:0 0 auto;
+    flex:0 0 auto;
     width:64px; height:64px; border-radius:50%;
     background:var(--accent); display:flex; align-items:center; justify-content:center;
     transition:transform .25s ease;
   }
   .showcase-play svg{width:22px; height:22px; fill:var(--accent-ink); margin-left:3px;}
   .showcase-card:hover .showcase-play{transform:scale(1.08);}
-  .showcase-copy{position:relative; z-index:1; display:flex; flex-direction:column; gap:5px;}
+  .showcase-copy{display:flex; flex-direction:column; gap:5px; text-align:left;}
   .showcase-title{font-family:var(--serif-display); font-size:1.5rem; letter-spacing:.01em;}
   .showcase-sub{
     font-family:var(--mono); font-size:.74rem; letter-spacing:.04em; text-transform:uppercase;
-    color:rgba(255,255,255,.6);
+    color:var(--ink-faint);
   }
   @media (max-width:520px){
-    .showcase-card{flex-direction:column; align-items:flex-start; text-align:left; gap:16px;}
+    .showcase-card{gap:16px;}
   }
-  .showcase-embed{
-    position:relative; width:100%; padding:56.25% 0 0 0;
-    border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
-    box-shadow:var(--shadow); background:var(--ink);
+
+  /* Showreel lightbox */
+  .reel-modal{
+    position:fixed; inset:0; z-index:999; display:none;
+    align-items:center; justify-content:center; padding:24px;
+    overflow-y:auto;
+    scrollbar-color:var(--accent) rgba(255,255,255,.08);
+    scrollbar-width:thin;
   }
-  .showcase-embed iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
+  .reel-modal.open{display:flex;}
+  .reel-modal::-webkit-scrollbar{width:10px;}
+  .reel-modal::-webkit-scrollbar-track{background:rgba(255,255,255,.06);}
+  .reel-modal::-webkit-scrollbar-thumb{
+    background-color:var(--accent); border-radius:999px;
+    border:2px solid rgba(10,12,14,.88);
+  }
+  .reel-modal::-webkit-scrollbar-thumb:hover{background-color:var(--accent-2);}
+  .reel-modal-backdrop{
+    position:absolute; inset:0; background:rgba(10,12,14,.88);
+    -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);
+  }
+  .reel-modal-panel{
+    position:relative; width:min(1100px, 100%); margin:auto;
+    background:#14171B; border-radius:var(--radius); overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.55);
+  }
+  .reel-modal-frame{position:relative; width:100%; height:min(78vh, 720px); background:#14171B;}
+  .reel-modal-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .reel-modal-close{
+    position:absolute; top:12px; right:12px; z-index:2;
+    width:40px; height:40px; border-radius:50%; border:none;
+    background:rgba(255,255,255,.14); color:#fff; font-size:22px; line-height:1;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:background .2s ease;
+  }
+  .reel-modal-close:hover{background:rgba(255,255,255,.26);}
+  @media (max-width:640px){ .reel-modal-frame{height:70vh;} }
 
   /* Skills */
   .skill-groups{display:grid; gap:22px; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
@@ -358,11 +370,12 @@
   .foot-links a{text-decoration:none; border-bottom:1px solid var(--line-strong); padding-bottom:2px; width:fit-content;}
   .foot-links a:hover{color:var(--accent); border-color:var(--accent);}
   .foot-note{margin-top:50px; padding-top:22px; border-top:1px solid var(--line); font-family:var(--mono); font-size:.72rem; color:var(--ink-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+  .foot-copyright{margin-top:14px; font-family:var(--mono); font-size:.68rem; color:var(--ink-faint); opacity:.65;}
 
   @media (prefers-reduced-motion: reduce){
     .rec-dot{animation:none;}
     .scrollcue .bar{animation:none; opacity:.6;}
-    .btn, .proj-card, .logo-tile svg{transition:none;}
+    .btn, .logo-tile svg{transition:none;}
   }
   @media (max-width:640px){
     .hero-inner{padding:76px 16px 56px;}
@@ -376,13 +389,12 @@
 
 <header class="topbar">
   <div class="topbar-row">
-    <span class="brand">BOUCHER</span>
+    <span class="brand">BOBBIE BOUCHER</span>
     <nav class="navlinks" id="navlinks">
       <a href="#strengths">Strengths</a>
       <a href="#experience">Experience</a>
       <a href="#clients">Clients</a>
       <a href="#showreel">Showreel</a>
-      <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
       <a href="#education">Education</a>
     </nav>
@@ -407,8 +419,8 @@
       <span>20+ Years in Production</span>
     </div>
     <div class="hero-ctas">
-      <a class="btn btn-solid" href="http://www.linkedin.com/in/robertboucher" target="_blank" rel="noopener">View LinkedIn ↗</a>
-      <a class="btn btn-ghost" href="#experience">See the Reel ↓</a>
+      <a class="btn btn-solid" href="https://www.linkedin.com/in/bobbieboucher" target="_blank" rel="noopener">View LinkedIn ↗</a>
+      <a class="btn btn-ghost" href="#showreel">See the Reel ↓</a>
     </div>
   </div>
   <div class="scrollcue"><span><span class="bar"></span>SCROLL</span></div>
@@ -825,62 +837,24 @@
     <div class="sec-head">
       <div class="eyebrow"><span class="tick"></span>SHOWREEL</div>
       <h2>Select cuts from behind the camera.</h2>
-      <p>Spots and campaigns from twenty years of production, hosted on Vimeo.</p>
+      <p>Latest spots and campaigns, fresh from the edit bay.</p>
     </div>
-    <div class="showcase-embed">
-      <iframe src="https://vimeo.com/showcase/12418374/embed2" allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share" frameborder="0" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
-    </div>
+    <button class="showcase-card" type="button" id="showreelBtn">
+      <span class="showcase-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+      <span class="showcase-copy">
+        <span class="showcase-title">Watch the full showreel</span>
+        <span class="showcase-sub">Opens the player in this page</span>
+      </span>
+    </button>
   </section>
 
-  <section id="projects">
-    <div class="sec-head">
-      <div class="eyebrow"><span class="tick"></span>NOTEWORTHY PROJECTS</div>
-      <h2>Games, campaigns, and titles from the credits list.</h2>
-      <p>Filter by medium.</p>
+  <div class="reel-modal" id="reelModal" role="dialog" aria-modal="true" aria-label="Showreel video player" aria-hidden="true">
+    <div class="reel-modal-backdrop" data-reel-close></div>
+    <div class="reel-modal-panel">
+      <button class="reel-modal-close" type="button" data-reel-close aria-label="Close video">&times;</button>
+      <div class="reel-modal-frame" id="reelFrame"></div>
     </div>
-    <div class="filters" id="filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="games">Games &amp; Interactive</button>
-      <button class="filter-btn" data-filter="film">Film &amp; Television</button>
-      <button class="filter-btn" data-filter="brand">Brand &amp; Digital</button>
-      <button class="filter-btn" data-filter="enterprise">Enterprise, Finance &amp; Health</button>
-    </div>
-    <div class="proj-grid" id="projGrid">
-      <div class="proj-card" data-cat="games"><div class="eyebrow">Games &amp; Interactive</div><h4>Microsoft's Halo</h4></div>
-      <div class="proj-card" data-cat="games"><div class="eyebrow">Games &amp; Interactive</div><h4>Microsoft's Gears of War 3</h4></div>
-      <div class="proj-card" data-cat="games"><div class="eyebrow">Games &amp; Interactive</div><h4>Nintendo Wii Health</h4></div>
-      <div class="proj-card" data-cat="games"><div class="eyebrow">Games &amp; Interactive</div><h4>Starz Boss Interactive Facebook Experience</h4></div>
-
-      <div class="proj-card" data-cat="film"><div class="eyebrow">Film &amp; Television</div><h4>Disney's Brave</h4></div>
-      <div class="proj-card" data-cat="film"><div class="eyebrow">Film &amp; Television</div><h4>Disney's Monsters University Digital Campaign</h4></div>
-      <div class="proj-card" data-cat="film"><div class="eyebrow">Film &amp; Television</div><h4>Sony's Evil Dead Campaign</h4></div>
-      <div class="proj-card" data-cat="film"><div class="eyebrow">Film &amp; Television</div><h4>Sony's 3Net</h4></div>
-      <div class="proj-card" data-cat="film"><div class="eyebrow">Film &amp; Television</div><h4>FX Networks — American Horror Story, Wilfred, It's Always Sunny in Philadelphia, Sons of Anarchy, The League</h4></div>
-
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>Pepsi / Naked Juice</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>Pepsi Refresh Everything Campaign</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>Disney's Family.com Network</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>Old Navy</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>Kia.com Quarterly Campaigns</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>Kia.com Media Support</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>CALottery.com</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>LG.com G3 Launch Campaign</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>Jack in the Box Super Bowl Launch</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>Zico.com Campaign</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>Argosy.edu</h4></div>
-      <div class="proj-card" data-cat="brand"><div class="eyebrow">Brand &amp; Digital</div><h4>Pasowines.com</h4></div>
-
-      <div class="proj-card" data-cat="enterprise"><div class="eyebrow">Enterprise, Finance &amp; Health</div><h4>Mattel</h4></div>
-      <div class="proj-card" data-cat="enterprise"><div class="eyebrow">Enterprise, Finance &amp; Health</div><h4>Pfizer</h4></div>
-      <div class="proj-card" data-cat="enterprise"><div class="eyebrow">Enterprise, Finance &amp; Health</div><h4>Toyota</h4></div>
-      <div class="proj-card" data-cat="enterprise"><div class="eyebrow">Enterprise, Finance &amp; Health</div><h4>23andMe</h4></div>
-      <div class="proj-card" data-cat="enterprise"><div class="eyebrow">Enterprise, Finance &amp; Health</div><h4>AT&amp;T Internet Fiber</h4></div>
-      <div class="proj-card" data-cat="enterprise"><div class="eyebrow">Enterprise, Finance &amp; Health</div><h4>Spectrum Internet</h4></div>
-      <div class="proj-card" data-cat="enterprise"><div class="eyebrow">Enterprise, Finance &amp; Health</div><h4>Wells Fargo Mortgage &amp; SMB Campaigns</h4></div>
-      <div class="proj-card" data-cat="enterprise"><div class="eyebrow">Enterprise, Finance &amp; Health</div><h4>Eli Lilly</h4></div>
-      <div class="proj-card" data-cat="enterprise"><div class="eyebrow">Enterprise, Finance &amp; Health</div><h4>U.S. Army</h4></div>
-    </div>
-  </section>
+  </div>
 
 
   <section id="skills">
@@ -905,11 +879,11 @@
       <h2>Before the call sheet.</h2>
     </div>
     <div class="ed-list">
-      <div class="ed-row"><span class="ed-dates">2005–2006</span><span class="ed-name">Bachelor of Fine Arts Program</span><span class="ed-loc">American Intercontinental University — Los Angeles, CA (Transfer)</span></div>
+      <div class="ed-row"><span class="ed-dates">2005–2006</span><span class="ed-name">Bachelor of Fine Arts Program</span><span class="ed-loc">American Intercontinental University — Los Angeles, CA</span></div>
       <div class="ed-row"><span class="ed-dates">2002</span><span class="ed-name">Noncommissioned Officer Leadership Program</span><span class="ed-loc">U.S. Marine Corps — Camp Pendleton, CA</span></div>
       <div class="ed-row"><span class="ed-dates">2001</span><span class="ed-name">Intelligence Specialist Course</span><span class="ed-loc">Navy &amp; Marine Corps Intelligence Training Center — Dam Neck, VA</span></div>
       <div class="ed-row"><span class="ed-dates">2000–2001</span><span class="ed-name">Marine Corps Bootcamp &amp; Advanced Combat Training</span><span class="ed-loc">U.S. Marine Corps — Camp Pendleton, CA</span></div>
-      <div class="ed-row"><span class="ed-dates">1998–1999</span><span class="ed-name">Associate Degree Program</span><span class="ed-loc">Santa Monica Community College — Santa Monica, CA (Transfer)</span></div>
+      <div class="ed-row"><span class="ed-dates">1998–1999</span><span class="ed-name">Associate Degree Program</span><span class="ed-loc">Santa Monica Community College — Santa Monica, CA</span></div>
     </div>
     <div class="also-row">
       <div class="eyebrow"><span class="tick"></span>ADDITIONAL TRAINING &amp; CERTIFICATIONS</div>
@@ -926,7 +900,8 @@
         <h2>Let's make<br>something.</h2>
       </div>
       <div class="foot-links">
-        <a href="http://www.linkedin.com/in/robertboucher" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="mailto:robert.boucher@gmail.com?subject=Let%27s%20make%20something.">Send the Brief ↗</a>
+        <a href="https://www.linkedin.com/in/bobbieboucher" target="_blank" rel="noopener">LinkedIn ↗</a>
         <a href="#hero">Back to top ↑</a>
       </div>
     </div>
@@ -934,6 +909,7 @@
       <span>Bobbie Boucher — Senior Creative &amp; Content Production Executive</span>
       <span>Los Angeles, CA</span>
     </div>
+    <div class="foot-copyright">© 2026 Bobbie Boucher. All rights reserved.</div>
   </footer>
 </main>
 
@@ -963,20 +939,6 @@
   }
   wireAccordionGroup(document.getElementById('strengthsAcc'));
   wireAccordionGroup(document.getElementById('expAcc'));
-
-  /* ---- Project filters ---- */
-  var filterBtns = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
-  var cards = Array.prototype.slice.call(document.querySelectorAll('.proj-card'));
-  filterBtns.forEach(function(btn){
-    btn.addEventListener('click', function(){
-      filterBtns.forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-      var f = btn.getAttribute('data-filter');
-      cards.forEach(function(c){
-        c.classList.toggle('hide', f !== 'all' && c.getAttribute('data-cat') !== f);
-      });
-    });
-  });
 
   /* ---- Scroll-spy nav ---- */
   var navLinks = Array.prototype.slice.call(document.querySelectorAll('#navlinks a'));
@@ -1080,6 +1042,38 @@
     (function animate(){ draw(); requestAnimationFrame(animate); })();
   }
   window.addEventListener('resize', function(){ resize(); makeOrbs(); });
+})();
+
+(function(){
+  var btn = document.getElementById('showreelBtn');
+  var modal = document.getElementById('reelModal');
+  var frameWrap = document.getElementById('reelFrame');
+  if(!btn || !modal || !frameWrap) return;
+  var SRC = 'https://vimeo.com/showcase/12418374/embed2';
+
+  function openReel(){
+    frameWrap.innerHTML = '<iframe src="'+SRC+'" allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share" allowfullscreen frameborder="0"></iframe>';
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    var closeBtn = modal.querySelector('.reel-modal-close');
+    if(closeBtn) closeBtn.focus();
+  }
+  function closeReel(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    frameWrap.innerHTML = '';
+    document.body.style.overflow = '';
+    btn.focus();
+  }
+
+  btn.addEventListener('click', openReel);
+  Array.prototype.forEach.call(modal.querySelectorAll('[data-reel-close]'), function(el){
+    el.addEventListener('click', closeReel);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && modal.classList.contains('open')) closeReel();
+  });
 })();
 </script>
 
