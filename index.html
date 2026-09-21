@@ -324,6 +324,12 @@
   @media (max-width:520px){
     .showcase-card{flex-direction:column; align-items:flex-start; text-align:left; gap:16px;}
   }
+  .showcase-embed{
+    position:relative; width:100%; padding:56.25% 0 0 0;
+    border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+    box-shadow:var(--shadow); background:var(--ink);
+  }
+  .showcase-embed iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
 
   /* Skills */
   .skill-groups{display:grid; gap:22px; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
@@ -821,13 +827,9 @@
       <h2>Select cuts from behind the camera.</h2>
       <p>Spots and campaigns from twenty years of production, hosted on Vimeo.</p>
     </div>
-    <a class="showcase-card" href="https://vimeo.com/showcase/12418374" target="_blank" rel="noopener">
-      <span class="showcase-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-      <span class="showcase-copy">
-        <span class="showcase-title">Watch the full showreel</span>
-        <span class="showcase-sub">Opens the Vimeo showcase in a new tab</span>
-      </span>
-    </a>
+    <div class="showcase-embed">
+      <iframe src="https://vimeo.com/showcase/12418374/embed2" allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share" frameborder="0" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+    </div>
   </section>
 
   <section id="projects">
