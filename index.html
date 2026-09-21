@@ -212,14 +212,14 @@
   .acc-item:last-child{border-bottom:1px solid var(--line);}
   .acc-trigger{
     width:100%; background:none; border:0; cursor:pointer; text-align:left;
-    display:flex; align-items:center; justify-content:space-between; gap:18px;
+    display:flex; align-items:center; justify-content:flex-start; gap:18px;
     padding:22px 4px; color:var(--ink);
   }
   .acc-trigger:hover .acc-title{color:var(--accent);}
-  .acc-left{display:flex; align-items:baseline; gap:16px; min-width:0;}
+  .acc-left{display:flex; align-items:baseline; gap:16px; min-width:0; flex:1 1 auto;}
   .acc-tag{font-family:var(--mono); font-size:.72rem; color:var(--ink-faint); flex:none;}
   .acc-title{font-weight:600; font-size:1.05rem; transition:color .2s ease;}
-  .acc-sub{font-family:var(--mono); font-size:.78rem; color:var(--ink-soft); flex:none; white-space:nowrap;}
+  .acc-sub{font-family:var(--mono); font-size:.78rem; color:var(--ink-soft); flex:none; white-space:nowrap; text-align:right;}
   .acc-plus{
     flex:none; width:26px; height:26px; position:relative; border:1px solid var(--line-strong); border-radius:50%;
   }
@@ -476,7 +476,7 @@
 
   <section id="experience">
     <div class="sec-head">
-      <div class="eyebrow"><span class="tick"></span>THE REEL</div>
+      <div class="eyebrow"><span class="tick"></span>THE CREDITS</div>
       <h2>Nine part miniseries, one continuous take.</h2>
       <p>From Marine Corps intelligence systems to running integrated production for one of Omnicom's largest agency networks — expand any credit for the full cut.</p>
     </div>
@@ -529,7 +529,7 @@
       <div class="acc-item">
         <button class="acc-trigger" aria-expanded="false">
           <div class="acc-left"><span class="acc-tag">06/09</span><span class="acc-title">Group Director, Creative Technology — BLITZ</span></div>
-          <span class="acc-sub">2011</span>
+          <span class="acc-sub">2011 – 2011</span>
           <span class="acc-plus"></span>
         </button>
         <div class="acc-panel"><div>
