@@ -421,6 +421,49 @@
   .reel-modal-close:hover{background:rgba(255,255,255,.26);}
   @media (max-width:640px){ .reel-modal-frame{height:70vh;} }
 
+  /* Showreel password gate */
+  .reel-gate{
+    display:flex; align-items:center; justify-content:center;
+    min-height:min(78vh, 720px); padding:48px 28px; text-align:center;
+    background:#14171B;
+  }
+  @media (max-width:640px){ .reel-gate{min-height:70vh;} }
+  .reel-gate-inner{max-width:360px; margin:0 auto;}
+  .reel-gate-eyebrow{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:14px;
+  }
+  .reel-gate-title{
+    font-family:var(--serif-display); font-weight:400; font-size:1.5rem; color:#ECE9E1; margin-bottom:10px;
+  }
+  .reel-gate-copy{font-size:.92rem; color:#A6ACB3; margin-bottom:26px; line-height:1.5;}
+  .reel-gate-form{display:flex; gap:10px; flex-wrap:wrap; justify-content:center;}
+  .reel-gate-input{
+    flex:1 1 180px; min-width:0;
+    background:rgba(255,255,255,.06); border:1px solid rgba(236,233,225,.22); border-radius:4px;
+    padding:12px 14px; color:#ECE9E1; font-family:var(--mono); font-size:.9rem; letter-spacing:.05em;
+  }
+  .reel-gate-input:focus{outline:2px solid var(--accent); outline-offset:2px; border-color:var(--accent);}
+  .reel-gate-input::placeholder{color:#6B7178;}
+  .reel-gate-submit{
+    font-family:var(--mono); font-size:.78rem; letter-spacing:.05em; text-transform:uppercase;
+    padding:12px 18px; border-radius:4px; border:1px solid transparent; background:var(--accent); color:#12100E;
+    cursor:pointer; transition:transform .18s ease; flex:none;
+  }
+  .reel-gate-submit:hover{transform:translateY(-2px);}
+  .reel-gate-error{
+    margin-top:16px; font-family:var(--mono); font-size:.76rem; color:#FF6B57;
+    opacity:0; height:0; overflow:hidden; transition:opacity .2s ease;
+  }
+  .reel-gate-error.show{opacity:1; height:auto;}
+  .reel-gate.shake{animation:reelShake .4s ease;}
+  @keyframes reelShake{
+    10%,90%{transform:translateX(-1px);}
+    20%,80%{transform:translateX(2px);}
+    30%,50%,70%{transform:translateX(-4px);}
+    40%,60%{transform:translateX(4px);}
+  }
+
   /* Skills */
   .skill-groups{display:grid; gap:22px; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
   .skill-group h4{
@@ -930,6 +973,20 @@
     <div class="reel-modal-backdrop" data-reel-close></div>
     <div class="reel-modal-panel">
       <button class="reel-modal-close" type="button" data-reel-close aria-label="Close video">&times;</button>
+
+      <div class="reel-gate" id="reelGate">
+        <div class="reel-gate-inner">
+          <div class="reel-gate-eyebrow">Restricted Access</div>
+          <h3 class="reel-gate-title">This reel is password protected.</h3>
+          <p class="reel-gate-copy">Enter the password I've shared with you to watch the full showreel.</p>
+          <form class="reel-gate-form" id="reelGateForm" autocomplete="off">
+            <input type="password" id="reelGateInput" class="reel-gate-input" placeholder="Password" aria-label="Password" autocomplete="off">
+            <button type="submit" class="reel-gate-submit">Unlock ▸</button>
+          </form>
+          <div class="reel-gate-error" id="reelGateError" aria-live="polite">Incorrect password — try again.</div>
+        </div>
+      </div>
+
       <div class="reel-modal-frame" id="reelFrame"></div>
     </div>
   </div>
@@ -991,6 +1048,7 @@
   </footer>
 </main>
 
+<script src="reel-auth.js"></script>
 <script>
 (function(){
   "use strict";
@@ -1126,16 +1184,54 @@
   var btn = document.getElementById('showreelBtn');
   var modal = document.getElementById('reelModal');
   var frameWrap = document.getElementById('reelFrame');
-  if(!btn || !modal || !frameWrap) return;
+  var gate = document.getElementById('reelGate');
+  var gateForm = document.getElementById('reelGateForm');
+  var gateInput = document.getElementById('reelGateInput');
+  var gateError = document.getElementById('reelGateError');
+  if(!btn || !modal || !frameWrap || !gate) return;
   var SRC = 'https://vimeo.com/showcase/12418374/embed2';
+  var SESSION_KEY = 'reelUnlocked';
+
+  function isUnlocked(){
+    try { return sessionStorage.getItem(SESSION_KEY) === '1'; } catch(e){ return false; }
+  }
+  function setUnlocked(){
+    try { sessionStorage.setItem(SESSION_KEY, '1'); } catch(e){}
+  }
+  function sha256Hex(text){
+    var enc = new TextEncoder().encode(text);
+    return crypto.subtle.digest('SHA-256', enc).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(b){
+        return b.toString(16).padStart(2,'0');
+      }).join('');
+    });
+  }
+
+  function showPlayer(){
+    gate.style.display = 'none';
+    frameWrap.style.display = 'block';
+    frameWrap.innerHTML = '<iframe src="'+SRC+'" allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share" allowfullscreen frameborder="0"></iframe>';
+  }
+  function showGate(){
+    frameWrap.style.display = 'none';
+    frameWrap.innerHTML = '';
+    gate.style.display = 'flex';
+    if(gateError) gateError.classList.remove('show');
+    if(gateInput) gateInput.value = '';
+  }
 
   function openReel(){
-    frameWrap.innerHTML = '<iframe src="'+SRC+'" allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share" allowfullscreen frameborder="0"></iframe>';
     modal.classList.add('open');
     modal.setAttribute('aria-hidden','false');
     document.body.style.overflow = 'hidden';
-    var closeBtn = modal.querySelector('.reel-modal-close');
-    if(closeBtn) closeBtn.focus();
+    if(isUnlocked()){
+      showPlayer();
+      var closeBtn = modal.querySelector('.reel-modal-close');
+      if(closeBtn) closeBtn.focus();
+    } else {
+      showGate();
+      setTimeout(function(){ if(gateInput) gateInput.focus(); }, 60);
+    }
   }
   function closeReel(){
     modal.classList.remove('open');
@@ -1152,6 +1248,36 @@
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && modal.classList.contains('open')) closeReel();
   });
+
+  if(gateForm){
+    gateForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var val = gateInput ? gateInput.value : '';
+      var expected = window.REEL_AUTH_HASH;
+      if(!expected || !window.crypto || !window.crypto.subtle){
+        if(gateError){
+          gateError.textContent = 'Unable to verify right now — please try again in a moment.';
+          gateError.classList.add('show');
+        }
+        return;
+      }
+      sha256Hex(val).then(function(hash){
+        if(hash === expected){
+          setUnlocked();
+          showPlayer();
+          var closeBtn = modal.querySelector('.reel-modal-close');
+          if(closeBtn) closeBtn.focus();
+        } else if(gateError){
+          gateError.textContent = 'Incorrect password — try again.';
+          gateError.classList.add('show');
+          gate.classList.remove('shake');
+          void gate.offsetWidth;
+          gate.classList.add('shake');
+          if(gateInput){ gateInput.value = ''; gateInput.focus(); }
+        }
+      });
+    });
+  }
 })();
 </script>
 
