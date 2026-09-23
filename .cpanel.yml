@@ -3,4 +3,4 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/mcc5niwdbxd5/public_html/
     - /bin/cp -f index.html $DEPLOYPATH
-    - /bin/cp -f og-image.jpg favicon.png favicon-192.png favicon-32.png sitemap.xml robots.txt $DEPLOYPATH
+    - /bin/cp -f og-image.jpg favicon.png favicon-192.png favicon-32.png sitemap.xml robots.txt reel-auth.js $DEPLOYPATH
