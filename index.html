@@ -1192,7 +1192,12 @@
   var SRC = 'https://vimeo.com/showcase/12418374/embed2';
   var SESSION_KEY = 'reelUnlocked';
 
+  // Password gate on/off switch. Set to true to require the password again —
+  // all the gate markup/CSS/JS below is left in place either way.
+  var GATE_ENABLED = false;
+
   function isUnlocked(){
+    if(!GATE_ENABLED) return true;
     try { return sessionStorage.getItem(SESSION_KEY) === '1'; } catch(e){ return false; }
   }
   function setUnlocked(){
